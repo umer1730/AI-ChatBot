@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from gemini import generate_response
 
-app = FastAPI()
+app = FastAPI(title="Chat Me")
 
 # Allow React frontend
 app.add_middleware(
@@ -21,7 +21,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message": "Backend Running Successfully"}
+    return {"message": "Welcome to the Backend"}
 
 
 @app.post("/chat")
