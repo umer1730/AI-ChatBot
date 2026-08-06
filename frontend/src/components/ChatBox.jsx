@@ -59,14 +59,11 @@ function ChatBox({ currentConversation, user,refreshChats,darkMode }) {
     try {
       /* Save user message */
       await saveMessage(
-        currentConversation.id,
-        "user",
-        prompt
+        currentConversation.id,"user",prompt
       );
       if (currentConversation.title === "New Chat") {
         await updateConversationTitle(
-          currentConversation.id,
-          prompt.substring(0,30)
+          currentConversation.id,prompt.substring(0,30)
         )
         await refreshChats()
       }
@@ -79,8 +76,7 @@ function ChatBox({ currentConversation, user,refreshChats,darkMode }) {
 
       /* Save AI response */
       await saveMessage(
-        currentConversation.id,
-        "assistant",
+        currentConversation.id,"assistant",
         res.data.response
       );
 
@@ -94,10 +90,21 @@ function ChatBox({ currentConversation, user,refreshChats,darkMode }) {
 
       setLoading(false)
     } 
-    catch(error){
-        console.log(error);
-        setLoading(false);
-    }
+    catch (error) {
+  console.error(error);
+
+  /* message save in database*/
+  await saveMessage(
+    currentConversation.id,
+    "assistant",
+    "AI is currently unavailable.Please try again."
+  );
+
+  /* Reload messages*/
+  const updated = await getMessages(currentConversation.id);
+  setMessages(updated);
+  setLoading(false);
+}
   };
 
   return (
